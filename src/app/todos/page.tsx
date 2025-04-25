@@ -13,7 +13,7 @@ interface SearchParams {
 export default async function TodosPage({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 }) {
   const supabase = await createClient();
 
@@ -28,8 +28,11 @@ export default async function TodosPage({
     redirect("/signin");
   }
 
-  // クエリパラメータから検索条件を取得
-  const { status, sort = "created_at", order = "desc" } = searchParams;
+  // クエリパラメータから検索条件を取得（searchParamsはPromiseとして処理します）
+  const currSearchParams = await searchParams;
+  const status = currSearchParams.status;
+  const sort = currSearchParams.sort || "created_at";
+  const order = currSearchParams.order || "desc";
 
   // TODOの取得
   let query = supabase

@@ -5,13 +5,15 @@ import { DeleteTodoButton } from "./delete-button";
 import CommentSection from "./comment-section";
 
 interface TodoDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function TodoDetailPage({ params }: TodoDetailPageProps) {
   const supabase = await createClient();
+  // paramsを非同期処理
+  const resolvedParams = await params;
 
   // ユーザー情報の取得
   const {
@@ -28,7 +30,7 @@ export default async function TodoDetailPage({ params }: TodoDetailPageProps) {
   const { data: todo, error: todoError } = await supabase
     .from("todos")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", resolvedParams.id)
     .eq("user_id", user.id)
     .single();
 
