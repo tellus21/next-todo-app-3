@@ -18,6 +18,7 @@ export async function createClient() {
             cookiesToSet.forEach(({ name, value, options }) => 
               resolvedCookieStore.set(name, value, options)
             )
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (error) {
             // The `setAll` method was called from a Server Component.
             // This can be ignored if you have middleware refreshing
